@@ -1,0 +1,147 @@
+﻿@page "/weather"
+@using System.Text;
+@using HouseHubRazor.Utility;
+@using WeatherForager;
+@inject HttpClient Http
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather Data</h1>
+
+@if (HourlyWeatherData == null)
+{
+    <p><em>Loading...</em></p>
+} 
+else
+{
+   <div align="center">
+
+    <h1 class="display-4">Weather Data</h1>
+
+    <table cellpadding="20" style="vertical-align:top">
+        <tr>
+            <td style="vertical-align:top">
+                <!-- Left Column-->
+                <div align="right">
+                    <span style="color:dimgrey; font-size:xx-small;">@DailyTimestamp</span>
+                </div>
+                <table cellpadding="10" border="1" width="600">
+                    <tr>
+                        <th colspan="4">
+                            7-day Forecast
+                        </th>
+                    </tr>
+                    <tr>
+                        <th> Day</th>
+                        <th> Hi-Lo</th>
+                        <th> Weather </th>
+                        <th> Moon </th>
+                    </tr>
+
+                    @foreach (WeatherForager.DailyWeatherModel dailyModel in DailyWeatherData)
+                    {
+                        <tr>
+                            <td>@dailyModel.weather_time.ShortWeekdayString()</td>
+                            <td>@dailyModel.high F - @dailyModel.low F </td>
+                            <td><img src="@dailyModel.GetImagePath()" height="24" width="24" style="float:left; margin: 0px 15px 0px 5px;" /> @dailyModel.GetWeatherCodeDisplay()</td>
+                            <td><img src="@dailyModel.GetMoonPhasePath()" height="24" width="24" style="float:left; margin: 0px 15px 0px 5px;" /> @dailyModel.GetMoonPhaseDisplay()</td>
+                        </tr>
+                    }
+                </table>
+
+            </td>
+            <td style="vertical-align:top">
+                <!-- Right Column-->
+                <div align="right">
+                    <span style="color:dimgrey; font-size:xx-small;">@HourlyTimestamp</span>
+                </div>
+
+                <table cellpadding="10" border="1" style="vertical-align:top" width="600">
+                    <tr>
+                        <th colspan="6">
+                            Hourly (24hr) 
+                            <span style="color:black; font-size:small; float: right"><span style="color:dimgrey; font-size:xx-small;">@DayLength</span>  <img src="img/015-sunrise.png" height="25" width="25"/> @SunriseTime.ToShortTimeString() <img src="img/016-sunset.png" height="25" width="25" /> @SunsetTime.ToShortTimeString()</span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Hour</th>
+                        <th>Temp</th>
+                        <th>Weather</th>
+                        <th>Feel</th>
+                        <th>Humidity</th>
+                        <th>Dew Point</th>
+                    </tr>
+                    @foreach (HourlyWeatherModel hourlyModel in @HourlyWeatherData)
+                    {
+                        <tr>
+                            <td> @hourlyModel.weather_time.ToLocalTime().ToShortTimeString()</td>
+                            <td bgcolor="@hourlyModel.GetHighLowBackground()">@hourlyModel.temp F </td>
+                            <td> <img src="@hourlyModel.GetImagePath()" height="24" width="24" style="float:left; margin: 0px 15px 0px 5px;" /> @hourlyModel.GetWeatherCodeDisplay()</td>
+                            <td bgcolor="@hourlyModel.GetHighLowBackground()">@hourlyModel.feels_like F</td>
+                            <td> @hourlyModel.humidity % </td>
+                            <td> @hourlyModel.dew_point F </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </td>
+
+        </tr>
+    </table>
+</div>
+<div> Weather icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+<div>Moon icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+}
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        HourlyWeatherData = await Http.GetFromJsonAsync<List<HourlyWeatherModel>?>("http://192.168.1.5:3031/forecast/hourly");
+
+        DailyWeatherData = await Http.GetFromJsonAsync<List<DailyWeatherModel>?>("http://192.168.1.5:3031/forecast/daily");
+
+    }
+
+    public List<HourlyWeatherModel>? HourlyWeatherData
+    {
+        get;
+        set;
+    } 
+
+    public List<DailyWeatherModel>? DailyWeatherData
+    {
+        get;
+        set;
+    } 
+
+    public DateTime DailyTimestamp
+    {
+        get => DailyWeatherData.Select(t => t.created_at.ToLocalTime()).Max();
+    }
+
+    public DateTime HourlyTimestamp
+    {
+        get => HourlyWeatherData.Select(t => t.created_at.ToLocalTime()).Max();
+    }
+
+    public DateTime SunriseTime
+    {
+        get => DailyWeatherData.Where(t => t.weather_time.ToLocalTime().Date == DateTime.Now.Date).First().sunrise_time.ToLocalTime();
+    }
+
+    public DateTime SunsetTime
+    {
+        get => DailyWeatherData.Where(t => t.weather_time.ToLocalTime().Date == DateTime.Now.Date).First().sunset_time.ToLocalTime();
+    }
+
+    public string DayLength
+    {
+        get
+        {
+            return (SunsetTime - SunriseTime).GetCondensedTimeSpanString();
+        }
+    }
+}

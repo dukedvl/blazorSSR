@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Jeff\\source\\repos\\blazorSSR\\househubBlazorSSR\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\househubBlazorSSR.bundle.scp.css",
+      "PackagePath": "staticwebassets\\househubBlazorSSR.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\Jeff\\source\\repos\\blazorSSR\\househubBlazorSSR\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Jeff\\source\\repos\\blazorSSR\\househubBlazorSSR\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Jeff\\source\\repos\\blazorSSR\\househubBlazorSSR\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\Jeff\\source\\repos\\blazorSSR\\househubBlazorSSR\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.househubBlazorSSR.props",
+      "PackagePath": "build\\househubBlazorSSR.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.househubBlazorSSR.props",
+      "PackagePath": "buildMultiTargeting\\househubBlazorSSR.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.househubBlazorSSR.props",
+      "PackagePath": "buildTransitive\\househubBlazorSSR.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.househubBlazorSSR.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
